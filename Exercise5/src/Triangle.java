@@ -2,11 +2,13 @@ import java.awt.*;
 import java.util.Arrays;
 
 /**
- * Simple class representing a triangle object. Designed
- * to show the idea of visibility, methods, class data, etc.
+ * Simple class representing a triangle object.
  *
  * Created by Pongnut Jittipanyakul (Prues)
  * ID 58070503419
+ *
+ * Modified for Exercise 5
+ * - Add calcBoundingBox() specific for triangle.
  *
  * 10 September 2017
  */
@@ -32,8 +34,16 @@ public class Triangle extends AbstractShape
         vertices.add(anchor);
         vertices.add(new Point(x2, y2));
         vertices.add(new Point(x3, y3));
-        int allXPoints[] = {x1, x2, x3};
-        int allYPoints[] = {y1, y2, y3};
+        calcBoundingBox();
+    }
+
+    /**
+     * Override calcBoundingBox to triangle
+     */
+    public void calcBoundingBox()
+    {
+        int allXPoints[] = {vertices.get(0).x, vertices.get(1).x, vertices.get(2).x};
+        int allYPoints[] = {vertices.get(0).y, vertices.get(1).y, vertices.get(2).y};
         Arrays.sort(allXPoints);
         Arrays.sort(allYPoints);
         minX = allXPoints[0];
@@ -41,7 +51,6 @@ public class Triangle extends AbstractShape
         minY = allYPoints[0];
         maxY = allYPoints[2];
     }
-
     /**
      * calculate the perimeter of this triangle
      *

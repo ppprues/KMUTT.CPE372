@@ -11,6 +11,12 @@ import javax.swing.border.*;
  * Created by Pongnut Jittipanyakul (Prues)
  * ID 58070503419
  *
+ * Modified for Exercise 5
+ * - Implements MouseListener.
+ * - Add redraw button.
+ * - Check inShape for all shapes.
+ * - Add draw to color the selected shape.
+ *
  * 10 September 2017
  */
 
@@ -76,6 +82,7 @@ public class FigureViewer extends JFrame implements ActionListener, MouseListene
         }
         else if (source == redrawButton)
         {
+            drawCanvas.update(getViewerGraphics());
             AbstractShape.drawAll(getViewerGraphics());
         }
         else if (source == clearButton)
@@ -127,11 +134,20 @@ public class FigureViewer extends JFrame implements ActionListener, MouseListene
     {
         for (int i = 0; i < AbstractShape.allFigures.size(); i++)
         {
-            AbstractShape currentShape = AbstractShape.allFigures.get(i);
-            if (currentShape.inShape(mouseEv.getX(), mouseEv.getY()))
+            if (AbstractShape.allFigures.get(i).inShape(mouseEv.getX(), mouseEv.getY()))
             {
                 drawCanvas.update(getViewerGraphics());
-                currentShape.draw(getViewerGraphics());
+                for (int j = 0; j < AbstractShape.allFigures.size(); j++)
+                {
+                    if (j == i)
+                    {
+                        AbstractShape.allFigures.get(j).draw(getViewerGraphics(), AbstractShape.allFigures.get(j).drawColor);
+                    }
+                    else
+                    {
+                        AbstractShape.allFigures.get(j).draw(getViewerGraphics());
+                    }
+                }
                 break;
             }
         }

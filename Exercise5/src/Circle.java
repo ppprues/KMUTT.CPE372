@@ -6,6 +6,10 @@ import java.awt.*;
  * Created by Pongnut Jittipanyakul (Prues)
  * ID 58070503419
  *
+ * Modified for Exercise 5
+ * - Add calcBoundingBox() specific for circle.
+ * - Add draw(Graphics2D graphics, Color fillColor) specific for circle.
+ *
  * 10 September 2017
  */
 
@@ -30,6 +34,11 @@ public class Circle extends AbstractShape
         anchor = new Point(x, y);
         vertices.add(anchor);
         this.radius = radius;
+        calcBoundingBox(x, y, radius);
+    }
+
+    public void calcBoundingBox(int x, int y, int radius)
+    {
         minX = x - radius;
         maxX = x + radius;
         minY = y - radius;
@@ -58,6 +67,9 @@ public class Circle extends AbstractShape
         return (double) Math.PI * Math.pow(radius, 2);
     }
 
+    /**
+     * Override draw to specify circle
+     */
     public void draw(Graphics2D graphics)
     {
         graphics.setPaint(drawColor);
@@ -69,6 +81,18 @@ public class Circle extends AbstractShape
         int labelx = anchor.x + 5;
         int labely = anchor.y - 5;
         graphics.drawString(new String(" " + shapeId), labelx, labely);
+    }
+
+    /**
+     * Override draw to specify circle and fill color
+     */
+    public void draw(Graphics2D graphics, Color fillColor)
+    {
+        draw(graphics);
+        int x = anchor.x - radius;
+        int y = anchor.y - radius;
+        graphics.setPaint(fillColor);
+        graphics.fillArc(x, y, 2 * radius, 2 * radius, 0, 360);
     }
 
     /**

@@ -6,6 +6,9 @@ import java.awt.*;
  * Created by Pongnut Jittipanyakul (Prues)
  * ID 58070503419
  *
+ * Modified for Exercise 5
+ * - Call calcBoundingBox() for the bounding box.
+ *
  * 10 September 2017
  */
 

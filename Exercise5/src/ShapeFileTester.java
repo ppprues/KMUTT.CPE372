@@ -5,6 +5,10 @@
  * Created by Pongnut Jittipanyakul (Prues)
  * ID 58070503419
  *
+ * Modified for Exercise 5
+ * - Delete nextShape.calcPerimeter().
+ * - Add draw for each shape.
+ *
  * 10 September 2017
  */
 

@@ -17,32 +17,31 @@ import java.awt.*;
 public class DrawingCanvas extends JPanel
 {
     /* Preferred size */
-    private Dimension desiredSize = null;
+   private Dimension desiredSize = null;
+    
+   /**
+    * Constructor sets desired size.
+    * @param width   Desired width
+    * @param height  Desired height
+    */
+   public DrawingCanvas(int width, int height)
+   {
+       desiredSize = new Dimension(width,height);
+   }
+ 
+   /**
+    * Override so that we can control the size.
+    */
+   public Dimension getPreferredSize()
+   {
+       return desiredSize;
+   } 
 
-    /**
-     * Constructor sets desired size.
-     *
-     * @param width  Desired width
-     * @param height Desired height
-     */
-    public DrawingCanvas(int width, int height)
-    {
-        desiredSize = new Dimension(width, height);
-    }
-
-    /**
-     * Override so that we can control the size.
-     */
-    public Dimension getPreferredSize()
-    {
-        return desiredSize;
-    }
-
-    /**
-     * Clear the panel to background color.
-     */
-    public void clear()
-    {
-        updateUI();
-    }
+   /**
+    * Clear the panel to background color.
+    */
+   public void clear()
+   {
+	updateUI();
+   }
 }

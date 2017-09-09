@@ -1,11 +1,13 @@
 import java.awt.*;
 
 /**
- * Simple class representing a square figure. Designed
- * to show the idea of visibility, methods, class data, etc.
+ * Simple class representing a square object.
  *
  * Created by Pongnut Jittipanyakul (Prues)
  * ID 58070503419
+ *
+ * Modified for Exercise 5
+ * - Call calcBoundingBox() for the bounding box.
  *
  * 10 September 2017
  */
@@ -53,7 +55,6 @@ public class Square extends AbstractShape
     {
         return (double) oneside * 4;
     }
-
 
     /**
      * calculate the area of this square
