@@ -2,13 +2,16 @@ import java.util.TreeSet;
 
 public class TileCollection
 {
-    private TreeSet tiles;
+    private TreeSet<Tile> tiles;
     private int maxTiles;
     private int minTiles;
 
     TileCollection(int minTiles, int maxTiles)
     {
-
+        tiles = new TreeSet<Tile>();
+        tiles.first();
+        this.maxTiles = maxTiles;
+        this.minTiles = minTiles;
     }
 
     public void printTiles()
@@ -16,9 +19,9 @@ public class TileCollection
 
     }
 
-    public int getTileCount()
+    /*public int getTileCount()
     {
-
+        return tiles.size();
     }
 
     public boolean addTile(Tile tile)
@@ -30,19 +33,19 @@ public class TileCollection
     {
 
     }
-
+*/
     public Tile getHighest()
     {
-
+        return tiles.last();
     }
 
     public Tile getLowest()
     {
-
+        return tiles.first();
     }
 
-    public Tile getRandom()
+    /*public Tile getRandom()
     {
 
-    }
+    }*/
 }

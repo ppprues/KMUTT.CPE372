@@ -5,15 +5,17 @@ public class Tile
 
     Tile(String letter, int value)
     {
+        tileLetter = letter;
+        tileValue = value;
     }
 
     public String getLetter()
     {
-
+        return tileLetter;
     }
 
     public int getValue()
     {
-
+        return tileValue;
     }
 }
