@@ -1,88 +1,98 @@
-import java.util.*;
-
 /**
- * Class that reads from a text file defining shapes and
- * creates instances of AbstractShape subclasses.
- * Possible lines in the file include:
- * TRIANGLE x1 y1 x2 y2 x3 y3
- * SQUARE x y side
- * DIAMOND x y vaxis haxis
- * CIRCLE x y radius
+ * TileReader class to reads from a text file defining tiles
+ * and creates TileCollection for initial letter distributions.
  *
- * Created by Sally Goldin, 29 August 2017 for Exercise 4
+ * Initial text file format:
+ *      E 1 24 means letter "E" scores 1 point and contains 24 tiles.
+ *
+ * Created by Pongnut Jittipanyakul (Prues) ID 58070503419
+ *
+ * 1 October 2017
  */
+
 public class TileReader extends TextFileReader
 {
+    /* initial TileCollection */
+    private TileCollection allTiles = new TileCollection(0, 200);
+
     /**
-     * Try to convert a string to an integer.
-     *
-     * @param stringToConvert String that we think should be an integer
-     * @return integer value or -999 if conversion error occurred.
+     * Create tile for each line from text file.
+     * @param fields    Array of strings parsed from file line.
      */
-    private int convertToInt(String stringToConvert)
+    private void createTiles(String fields[])
     {
-        int value = -999; /* start by assuming bad value */
-        try
+        int totalDuplicate = Integer.parseInt(fields[2]);
+        for (int i = 0; i < totalDuplicate; i++)
         {
-            value = Integer.parseInt(stringToConvert);
+            allTiles.addTile(new Tile(fields[0], Integer.parseInt(fields[1]), i));
         }
-        catch (NumberFormatException nfe)
-        {
-        }
-        return value;
     }
 
     /**
-     * check line from shape file to make sure it has correct shape
-     * type and correct arguments.
+     * Check line from text file to make sure it has correct format.
      *
-     * @param line String read from the file
-     * @return The shape specified by the command line, or null
-     * if the line contains any errors.
+     * @param line  String read from the file
+     * @return bOK  true, unless that line can't be used to create.
      */
-    private Tile parseCheckShapeCommand(String line)
+    private boolean parseCheckTileCommand(String line)
     {
-        Tile newTile = null;
+        boolean bOK = true;
         String fields[] = line.split(" ");
         if (fields.length == 3)  /* should be three fields */
         {
-            newTile = new Tile(fields[1], convertToInt(fields[2]));
+            System.out.println("  readTile returned an object: \"" + fields[0] + "\" Value: " + fields[1] + " Total Number of Tiles: " + fields[2]);
+
+            if (fields[0].equals("[blank]"))
+            {
+                fields[0] = " ";
+            }
+
+            if (Integer.parseInt(fields[1]) >= 0 && Integer.parseInt(fields[2]) > 0)
+            {
+                createTiles(fields);
+            }
+            else /* not a valid line */
+            {
+                System.out.println("\t\tInvalid tile command");
+            }
         }
         else
         {
             System.out.println("\t\tLine has too few fields");
+            bOK = false;
         }
-        return newTile;  /* could be null */
+        return bOK;
     }
 
     /**
-     * Read the next line from the file.
-     * Parse it and return the appropriate type of shape
+     * Read all line from the file.
+     * Parse each line and return the success or failure
      * based on the content of the line.
      * If an error is found, just skips to the next line,
      * until it gets to a good line or the end of the file.
-     *
-     * @return specific subclass instance of AbstractShape, or null
-     * if the end of the file.
      */
-    public Tile readTile()
+    public void readTiles()
     {
-        Tile newTile = null;
         boolean bError = false;
         String line;
-        do
+        line = getNextLine();
+        while (line != null)
         {
-            line = getNextLine();
-            if (line != null)
+            if (!parseCheckTileCommand(line))
             {
-                newTile = parseCheckShapeCommand(line);
-                if (newTile == null)
-                {
-                    System.out.println("\t\tBad line: '" + line + "' ==> Skipping");
-                }
+                System.out.println("\t\tBad line: '" + line + "' ==> Skipping");
             }
+            line = getNextLine();
         }
-        while ((newTile == null) && (line != null));
-        return newTile;
+    }
+
+    /**
+     * Return this TileCollection.
+     *
+     * @return allTiles allTiles in TileCollection
+     */
+    public TileCollection getAllFiles()
+    {
+        return allTiles;
     }
 }
