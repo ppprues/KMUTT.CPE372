@@ -1,64 +1,49 @@
 /**
- * Player class to keep name, score and all tiles.
+ * Player.java
  *
- * Created by Pongnut Jittipanyakul (Prues) ID 58070503419
+ * This class represents a single player in the Scrabble game.
+ * Currently this class is incomplete. All it can do is draw random
+ * tiles.
  *
- * 1 October 2017
+ * Created by Pongnut Jittipanyakul (Prues) ID: 58070503419
+ *
+ * Modified for Exercise 7
+ * - Add getName() method.
+ * - Add clearTiles() method.
+ *
+ * 15 October 2017
  */
-
-import java.io.IOException;
-
 public class Player
 {
-    /** max limit for playerTiles */
-    private static final int maxLimit = 7;
+    /**
+     * The player's tiles for making words
+     */
+    private TileCollection playerTiles = new TileCollection(0, 7);
 
-    /** instance of reader that knows how to parse the files */
-    private static TileReader reader;
+    /* each player has a maximum of 7 tiles at any one time */
 
-    /** player's name */
+    /**
+     * Player's name
+     */
     private String name;
 
-    /** player's score */
-    private int score;
-
-    /** player's all tiles */
-    private TileCollection playerTiles;
+    /**
+     * Player's current score
+     */
+    private int score = 0;
 
     /**
-     * Constructor creates a new player by specifying name
-     * and set the initial score and playerTiles.
-     *
-     * @param name player's name
+     * Contructor sets the name
+     * @param playerName   Name of this player
      */
-    public Player(String name)
+    public Player(String playerName)
     {
-        this.name = name;
-        score = 0;
-        playerTiles = new TileCollection(0, maxLimit);
+        name = playerName;
     }
 
     /**
-     * Check the maximum limit for player's tiles
-     * and return false when it exceeds the limit.
-     *
-     * @param howMany   player's name
-     * @return bOK      true, unless it exceeds the limit (maxTiles)
-     */
-    public boolean selectTiles(int howMany)
-    {
-        boolean bOK = false;
-        if (playerTiles.getTileCount() < howMany)
-        {
-            bOK = true;
-        }
-        return bOK;
-    }
-
-    /**
-     * Return player's name
-     *
-     * @return name player's name
+     * Return the name
+     * @return player's name
      */
     public String getName()
     {
@@ -66,9 +51,8 @@ public class Player
     }
 
     /**
-     * Return player's score
-     *
-     * @return score    player's score
+     * Return the score
+     * @return player's score
      */
     public int getScore()
     {
@@ -76,182 +60,112 @@ public class Player
     }
 
     /**
-     * Update score by add specific points to player's score
-     *
-     * @param points    points to add
+     * Select tiles randomly from the TileManager
+     * @param  howMany  How many tiles to select
+     * @return true if successful, false if error
+     *         Error could involve there are not enough tiles
+     *            left, or the user asking for too many tiles
      */
-    public void updateScore(int points)
+    public boolean selectTiles(int howMany)
     {
-        score += points;
+        boolean bOk = true;
+        if ((playerTiles.getTileCount() + howMany) > playerTiles.getMaxTiles())
+        {
+            System.out.println("Error - Too many tiles requested");
+            bOk = false;
+        }
+        else
+        {
+            int i = 0;
+            Tile tile = null;
+            for (i = 0; (i < howMany) && bOk; i++)
+            {
+                tile = TileManager.selectRandomTile();
+                if (tile == null)
+                {
+                    bOk = false;
+                }
+                else
+                {
+                    bOk = playerTiles.addTile(tile);
+                }
+            }
+        }
+        return bOk;
     }
 
     /**
-     * Print all tiles of this player
+     * Delete all tiles in the collection
+     */
+    public void clearTiles()
+    {
+        playerTiles.clear();
+    }
+
+    /**
+     * Print the tiles the player currently holds
      */
     public void printTiles()
     {
+        System.out.println("Tiles for Player " + name);
         playerTiles.printTiles();
     }
 
     /**
-     * Asks for one integer value, and returns it as the function value.
-     *
-     * @param prompt String to print, telling which coordinate
-     * @return the value. Exits with error if user types in something that can't be read as an integer
+     * Update the player's score
+     * @param points  points to add or subtract (if negative)
      */
-    protected static int getOneInteger(String prompt)
+    public void updateScore(int points)
     {
-        int value = 0;
-        String inputString;
-        int readBytes = 0;
-        byte buffer[] = new byte[200];
-        System.out.println(prompt);
-        try
-        {
-            readBytes = System.in.read(buffer, 0, 200);
-        }
-        catch (IOException ioe)
-        {
-            System.out.println("Input/output exception - Exiting");
-            System.exit(1);
-        }
-        inputString = new String(buffer);
-        try
-        {
-            int pos = inputString.indexOf("\n");
-            if (pos > 0)
-            {
-                inputString = inputString.substring(0, pos);
-            }
-            value = Integer.parseInt(inputString);
-        }
-        catch (NumberFormatException nfe)
-        {
-            System.out.println("Bad number entered - Exiting");
-            System.exit(1);
-        }
-        return value;
+        score = score + points;
     }
 
     /**
-     * Asks for a string, and returns it as the function value.
-     *
-     * @param prompt String to print, telling which coordinate
-     * @return the string value entered, without a newline
+     * Return tile with highest score. Used to determine
+     * player who will go first.
+     * @return Tile with highest score, of all those in playerTiles
      */
-    protected static String getOneString(String prompt)
+    public Tile getHighest()
     {
-        String inputString;
-        int readBytes = 0;
-        byte buffer[] = new byte[200];
-        System.out.println(prompt);
-        try
-        {
-            readBytes = System.in.read(buffer, 0, 200);
-        }
-        catch (IOException ioe)
-        {
-            System.out.println("Input/output exception - Exiting");
-            System.exit(1);
-        }
-        inputString = new String(buffer);
-        int pos = inputString.indexOf("\n");
-        if (pos > 0)
-        {
-            inputString = inputString.substring(0, pos);
-        }
-        return inputString;
+        return playerTiles.getHighest();
     }
 
     /**
-     * Main function to test
+     * Main function for testing/exercising the use case
      */
     public static void main(String args[])
     {
-        boolean bEndGame = false; /* end game yet */
+    /* Fill the pool of tiles */
+        TileManager.initialize();
 
-        /* Create all tiles from argument */
-        if (args.length != 2)
+        Player player = new Player("Sally Goldin");
+        if (player.selectTiles(4))
         {
-            System.out.println("Usage:   java Player [filetoread]\n");
-            System.exit(0);
+            System.out.println("Successfully selected 4 tiles\n");
         }
-        reader = new TileReader();
-        System.out.print("Trying to open'" + args[0] + "' ... ");
-        if (!reader.open(args[0]))
+        else
         {
-            System.out.println("FAILED!\n\n");
-            System.exit(1);
+            System.out.println("Error selecting 4 tiles\n");
         }
-        System.out.println("Success!\n");
-        reader.readTiles();
-        TileManager bagTiles = new TileManager(reader.getAllFiles());
-        reader.close();
-        System.out.println("\nClosing file and exiting...\n\n");
-
-        /* Initial the first player */
-        String name = getOneString("What is first player's name?");
-        Player firstPlayer = new Player(name);
-        Player secondPlayer = new Player("Com");
-
-        /* Draw tiles for player */
-        while (firstPlayer.selectTiles(maxLimit) && bagTiles.getTileCount() > 0)
+        player.printTiles();
+        if (player.selectTiles(3))
         {
-            Tile selectTile = bagTiles.selectRandomTile();
-            if (selectTile != null && !firstPlayer.playerTiles.addTile(selectTile))
-            {
-                System.out.println("Can't add tile");
-            }
+            System.out.println("Successfully selected 3 tiles\n");
         }
-        firstPlayer.printTiles();
-
-        /* Loop until end game */
-        while (!bEndGame)
+        else
         {
-            System.out.println("\n" + firstPlayer.getName() + " " + firstPlayer.getScore() + "-" + secondPlayer.getScore() + " " + secondPlayer.getName());
-            System.out.println("\n1 - Pass\n2 - Exchange\n3 - Play\n0 - Give up");
-            int turn = getOneInteger("What do " + firstPlayer.getName() + " want to do?");
-            if (turn == 1) /* Pass */
-            {
-                System.out.println(firstPlayer.getName() + " say \"Pass!\"");
-            }
-            if (turn == 2) /* Exchange */
-            {
-                System.out.println(firstPlayer.getName() + " say \"Exchange!\"");
-                /* Exchange method */
-                while (firstPlayer.selectTiles(maxLimit) && bagTiles.getTileCount() > 0)
-                {
-                    Tile selectTile = bagTiles.selectRandomTile();
-                    if (selectTile != null && !firstPlayer.playerTiles.addTile(selectTile))
-                    {
-                        System.out.println("    Can't add tile");
-                    }
-                }
-            }
-            else if (turn == 3) /* Play */
-            {
-                System.out.println(firstPlayer.getName() + " say \"Play!\"");
-                /* Play method */
-                if (firstPlayer.playerTiles.getTileCount() > 0)
-                {
-                    Tile playTile = firstPlayer.playerTiles.getRandom();
-                    firstPlayer.updateScore(playTile.getValue());
-                    firstPlayer.playerTiles.removeTile(playTile);
-                }
-                else
-                {
-                    System.out.println("You don't have tile to play");
-                }
-            }
-            else if (turn == 0) /* Give up */
-            {
-                bEndGame = true;
-            }
-
-            /* Print all tiles when finished each turn */
-            firstPlayer.printTiles();
+            System.out.println("Error selecting 3 tiles\n");
         }
-
-        System.out.println(firstPlayer.getName() + " Win! with score " + firstPlayer.getScore() + "-" + secondPlayer.getScore() + " " + secondPlayer.getName());
+        player.printTiles();
+        if (player.selectTiles(2))
+        {
+            System.out.println("Successfully selected 2 tiles\n");
+        }
+        else
+        {
+            System.out.println("Error selecting 2 tiles\n");
+        }
+        player.printTiles();
+        System.out.println("Highest score tile is " + player.getHighest());
     }
 }

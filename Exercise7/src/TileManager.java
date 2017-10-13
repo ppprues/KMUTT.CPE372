@@ -1,50 +1,105 @@
 /**
- * TileManager class to keep all tiles in bag
+ * TileManager.java
  *
- * Created by Pongnut Jittipanyakul (Prues) ID 58070503419
+ * This class represents the pool of unselected tiles in the
+ * game of Scrabble.
  *
- * 1 October 2017
+ * All methods are static because this is a singleton class.
+ *
+ * Created by Pongnut Jittipanyakul (Prues) ID: 58070503419
+ *
+ * Modified for Exercise 7
+ * - Add addTile() method.
+ *
+ * 15 October 2017
  */
-
 public class TileManager
 {
-    /** all tiles of bag */
-    private TileCollection tiles;
+    private static final String tileFileName = "alltiles.txt";
 
     /**
-     * Constructor creates all tiles for bag.
-     *
-     * @param tiles all tiles in the beginning game
+     * collection of tiles in the pool
      */
-    public TileManager(TileCollection tiles)
+    private static TileCollection tiles = new TileCollection(0, 100);
+
+    /**
+     * Set up all the tiles necessary for a new game
+     * This could be done via reading from a file or
+     * by hardcoding the data
+     */
+    public static void initialize()
     {
-        this.tiles = tiles;
+        tiles.clear();  /* get rid of any old tiles */
+        TileFileReader reader = new TileFileReader();
+        if (!reader.open(tileFileName))
+        {
+            System.out.println("Error opening tile file " +
+                    tileFileName + " in TileManager:initialize()");
+            System.exit(0);
+        }
+        Tile nextTile = null;
+        while ((nextTile = reader.getTile()) != null)
+        {
+            boolean bOk = tiles.addTile(nextTile);
+            if (bOk)
+            {
+                //System.out.println("Successfuly added " + nextTile);
+            }
+            else
+            {
+                System.out.println("Error adding " + nextTile);
+            }
+        }
+        System.out.println("TileManager initialized");
     }
 
     /**
-     * Return this TileCollection size.
-     *
-     * @return size total tiles count
+     * Add a tile to the pool.
+     * @param newTile   Tile to add
+     * @return true if successful, false if would violate the max constraint
+     *         returns false if tile already in the set as well
      */
-    public int getTileCount()
+    public static boolean addTile(Tile newTile)
+    {
+        return tiles.addTile(newTile);
+    }
+
+    /**
+     * Get a random tile from the pool and return it to the
+     * user, deleting it from the collection.
+     * @return random Tile or null if the pool is empty
+     */
+    public static Tile selectRandomTile()
+    {
+        Tile theTile = tiles.getRandom();
+        if (theTile != null)
+        {
+            tiles.removeTile(theTile);
+        }
+        return theTile;
+    }
+
+    /**
+     * Get current number of tiles in the pool 
+     * @return current size of tile collection
+     */
+    public static int getTilesRemaining()
     {
         return tiles.getTileCount();
     }
 
-    /**
-     * Return the random tile in this TileCollection.
-     *
-     * @return tile  the random tile in this TileCollection
-     *               or null for can't select tile.
-     */
-    public Tile selectRandomTile()
+    /** Main function for testing */
+    public static void main(String args[])
     {
-        Tile randomTile = tiles.getRandom();
-        if (!tiles.removeTile(randomTile))
+        TileManager.initialize();
+        for (int i = 0; i < 5; i++)
         {
-            randomTile = null;
+            Tile t = selectRandomTile();
+            if (t != null)
+            {
+                System.out.println("Selected " + t);
+            }
         }
-
-        return randomTile;
+        System.out.println(TileManager.getTilesRemaining() + " tiles remain in pool");
     }
 }

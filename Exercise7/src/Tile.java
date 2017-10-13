@@ -1,77 +1,94 @@
 /**
- * Tile class to keep each tile including letter, value and count
+ * Tile.java
  *
- * Created by Pongnut Jittipanyakul (Prues) ID 58070503419
- *
- * 1 October 2017
+ * A Tile represents a single letter in Scrabble.
+ *    Created by Sally Goldin, 2 October 2017
  */
-
-public class Tile implements Comparable<Tile>
+public class Tile
 {
-    /** tile's letter */
-    private String tileLetter;
+    /**
+     * Static counter so we can create unique sequence numbers
+     */
+    private static int counter = 0;
 
-    /** tile's value */
-    private int tileValue;
+    /** Letter associated with this tile. "-" means a blank tile. */
+    private String tileLetter = "";
 
-    /** tile's count */
-    private int tileCount;
+    /** Point score associated with this tile */
+    private int tileValue = 0;
+
+    /** Sequence number so we can distinguish different instances of the
+     *   same letter.
+     */
+    private int sequence;
+
 
     /**
-     * Constructor creates a new tile
-     * by specifying letter, value and count.
-     *
-     * @param letter    tile's letter
-     * @param value     tile's value
-     * @param count     tile's count
+     * Constructor sets the tile letter and score.
+     * We should probably validate to make sure the letter is legal 
+     * but it's akward to deal with errors in constructors.
+     * @param  letter   Tile letter
+     * @param  score    Tile score
      */
-    public Tile(String letter, int value, int count)
+    public Tile(String letter,int score)
     {
         tileLetter = letter;
-        tileValue = value;
-        tileCount = count;
+        tileValue = score;
+        counter++;
+        sequence = counter;
     }
 
     /**
-     * Return tile's letter
-     *
-     * @return tileLetter tile's letter
+     * Getter for letter 
+     * @return tile letter
      */
-    public String getLetter()
+    public String getTileLetter()
     {
         return tileLetter;
     }
 
     /**
-     * Return tile's value
-     *
-     * @return tileValue tile's value
+     * Getter for score 
+     * @return tile score
      */
-    public int getValue()
+    public int getTileValue()
     {
         return tileValue;
     }
 
+
     /**
-     * Return tile's count
-     *
-     * @return tileCount tile's count
+     * Getter for sequence 
+     * @return sequence for this tile
      */
-    public int getCount()
+    public int getSequence()
     {
-        return tileCount;
+        return sequence;
     }
 
-    @Override
-    public int compareTo(Tile o)
+    /**
+     * Override toString so we can easily print a tile
+     * @return String to print
+     */
+    public String toString()
     {
-        if (this.getLetter().equals(o.getLetter()))
-        {
-            return Integer.compare(this.getCount(), o.getCount());
-        }
-        else
-        {
-            return this.getLetter().compareTo(o.getLetter());
-        }
+        return new String(tileLetter + "(" + tileValue + ")");
     }
+
+    /**
+     * Override equals() so we can distinguish different tiles with
+     * the same letter.
+     * @param otherTile   Tile we are checking
+     * @return true if current instance equals otherTile else false
+     */
+    public boolean equals(Tile otherTile)
+    {
+        if ((otherTile.getTileLetter().compareTo(tileLetter) == 0) &&
+                (otherTile.getSequence() == sequence) &&
+                (otherTile.getTileValue() == tileValue))
+            return true;
+        else
+            return false;
+    }
+
 }
