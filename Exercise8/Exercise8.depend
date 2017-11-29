@@ -1,0 +1,26 @@
+# depslib dependency file v1.0
+1511946756 source:d:\pongnut\documents\kmutt.cpe372\exercise9\cat.cpp
+
+1511948779 source:d:\pongnut\documents\kmutt.cpe372\exercise9\main.cpp
+	"Dog.cpp"
+
+1511949163 source:d:\pongnut\documents\kmutt.cpe372\exercise9\animal.cpp
+	<iostream>
+	<string>
+
+1511947708 d:\pongnut\documents\kmutt.cpe372\exercise9\animal.h
+
+1511949235 source:d:\pongnut\documents\kmutt.cpe372\exercise9\dog.cpp
+	"Animal.cpp"
+	<iostream>
+	<string>
+
+1511949004 d:\pongnut\documents\kmutt.cpe372\exercise9\dog.cpp
+	"Animal.h"
+	<iostream>
+	<string>
+
+1511949163 d:\pongnut\documents\kmutt.cpe372\exercise9\animal.cpp
+	<iostream>
+	<string>
+
